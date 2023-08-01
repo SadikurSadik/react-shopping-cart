@@ -1,18 +1,27 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { userLogin } from "../utils/auth";
 
 const LoginPage = () => {
+  const [loading, setLoading] = useState(false);
   const [email, setEmail] = useState("");
   const navigate = useNavigate();
+  const [searchParam] = useSearchParams();
+  const addToCartId = searchParam.get("add-to-cart");
 
   const handleLogin = () => {
+    setLoading(true);
     userLogin(email)
       .then((data) => {
-        console.log(data);
+        setLoading(false);
         if (data?.msg === "success") {
-          navigate(`/otp?email=${email}`);
+          let url = `/otp?email=${email}`;
+          if (addToCartId) {
+            url += `&add-to-cart=${addToCartId}`;
+          }
+          navigate(url);
         } else {
+          setLoading(false);
           console.log("Something went wrong. Please try again.");
         }
       })
@@ -47,7 +56,11 @@ const LoginPage = () => {
                 <button
                   className="btn rounded-lg w-full my-4 btn-primary"
                   onClick={handleLogin}
+                  disabled={loading}
                 >
+                  {loading && (
+                    <span className="loading loading-spinner loading-sm"></span>
+                  )}
                   Next
                 </button>
               </div>

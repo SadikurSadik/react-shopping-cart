@@ -1,22 +1,44 @@
 import React, { useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { verifyLogin } from "../utils/auth";
+import { addProductToCart } from "../utils/cart";
 
 const OtpPage = () => {
+  const [loading, setLoading] = useState(false);
   const [pin, setPin] = useState(null);
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const email = searchParams.get("email");
+  const addToCartId = searchParams.get("add-to-cart");
 
   const handleVerifyLogin = () => {
+    setLoading(true);
     verifyLogin(email, pin)
       .then((data) => {
         if (data?.msg === "success") {
           localStorage.setItem("token", data.data);
-          navigate("/");
+          if (addToCartId) {
+            setTimeout(() => {
+              addProductToCart(addToCartId)
+                .then((data) => {
+                  setLoading(false);
+                  navigate("/cart-list");
+                })
+                .catch((err) => {
+                  setLoading(false);
+                  navigate("/");
+                });
+            }, 2000);
+          } else {
+            setLoading(false);
+            navigate("/");
+          }
         }
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        setLoading(false);
+        console.log(err);
+      });
   };
   return (
     <div className="container  mx-auto">
@@ -45,7 +67,11 @@ const OtpPage = () => {
                 <button
                   className="btn rounded-lg w-full my-4 btn-primary"
                   onClick={handleVerifyLogin}
+                  disabled={loading}
                 >
+                  {loading && (
+                    <span className="loading loading-spinner loading-sm"></span>
+                  )}
                   Next
                 </button>
               </div>

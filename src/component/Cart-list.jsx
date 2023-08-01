@@ -49,7 +49,7 @@ const CartList = () => {
           <div className="container col-span-2">
             <div className="grid grid-cols-1  md:grid-cols-1 lg:grid-cols-1 gap-3">
               {cartItems &&
-                (cartItems.length ? (
+                (cartItems.length > 0 ? (
                   cartItems.map((item) => (
                     <CartItem
                       item={item}

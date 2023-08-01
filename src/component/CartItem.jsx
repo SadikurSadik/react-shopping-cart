@@ -2,6 +2,7 @@ import { React, useState } from "react";
 
 const CartItem = ({ item, handleRemoveCart }) => {
   const [loading, setLoading] = useState(false);
+
   return (
     <div className="card card-side bg-white shadow-xl">
       <figure>

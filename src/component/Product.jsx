@@ -1,21 +1,28 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { addProductToCart } from "../utils/cart";
 
 const Product = ({ product }) => {
   const [loading, setLoading] = useState(false);
+  const token = localStorage.getItem("token");
+  const navigate = useNavigate();
 
   const handleAddToCart = () => {
-    setLoading(true);
-    addProductToCart(product.id)
-      .then((data) => {
-        setLoading(false);
-        if (data?.msg === "success") {
-          alert("Product added to cart successfully.");
-        }
-      })
-      .catch((err) => {
-        setLoading(false);
-      });
+    if (!token) {
+      navigate(`/login?add-to-cart=${product.id}`);
+    } else {
+      setLoading(true);
+      addProductToCart(product.id)
+        .then((data) => {
+          setLoading(false);
+          if (data?.msg === "success") {
+            alert("Product added to cart successfully.");
+          }
+        })
+        .catch((err) => {
+          setLoading(false);
+        });
+    }
   };
 
   return (
