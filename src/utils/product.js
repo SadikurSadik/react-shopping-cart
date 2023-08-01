@@ -5,6 +5,5 @@ const fetchProducts = async () => {
     return data.msg === 'success' ? data.data : [];
 }
 
-
 export { fetchProducts };
 
