@@ -1,15 +1,21 @@
-import React from "react";
+import React, { useState } from "react";
 import { addProductToCart } from "../utils/cart";
 
 const Product = ({ product }) => {
+  const [loading, setLoading] = useState(false);
+
   const handleAddToCart = () => {
+    setLoading(true);
     addProductToCart(product.id)
       .then((data) => {
+        setLoading(false);
         if (data?.msg === "success") {
           alert("Product added to cart successfully.");
         }
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        setLoading(false);
+      });
   };
 
   return (
@@ -25,7 +31,11 @@ const Product = ({ product }) => {
           <button
             onClick={handleAddToCart}
             className="btn btn-sm btn-outline btn-primary"
+            disabled={loading}
           >
+            {loading && (
+              <span className="loading loading-spinner loading-sm"></span>
+            )}
             Add To Cart
           </button>
         </div>

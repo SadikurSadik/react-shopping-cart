@@ -1,6 +1,7 @@
-import React from "react";
+import { React, useState } from "react";
 
 const CartItem = ({ item, handleRemoveCart }) => {
+  const [loading, setLoading] = useState(false);
   return (
     <div className="card card-side bg-white shadow-xl">
       <figure>
@@ -14,8 +15,15 @@ const CartItem = ({ item, handleRemoveCart }) => {
         <div className="card-actions justify-end">
           <button
             className="btn btn-sm btn-primary btn-outline"
-            onClick={() => handleRemoveCart(item?.product?.id)}
+            disabled={loading}
+            onClick={() => {
+              setLoading(true);
+              handleRemoveCart(item?.product?.id, setLoading);
+            }}
           >
+            {loading && (
+              <span className="loading loading-spinner loading-sm"></span>
+            )}
             Remove
           </button>
         </div>

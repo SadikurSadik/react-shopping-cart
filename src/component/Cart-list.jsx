@@ -14,10 +14,10 @@ const CartList = () => {
       .catch((err) => console.log(err));
   }, []);
 
-  const handleRemoveCart = (productId) => {
-    console.log(productId);
+  const handleRemoveCart = (productId, func) => {
     removeProductFromCart(productId)
       .then((data) => {
+        func(false);
         if (data.msg === "success") {
           // remove that item from local state: cartItems
           const items = cartItems.filter(
@@ -26,7 +26,10 @@ const CartList = () => {
           setCartItems(items);
         }
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        func(false);
+        console.log(err);
+      });
   };
 
   const calculateTotalPrice = () => {
