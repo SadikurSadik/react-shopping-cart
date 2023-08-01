@@ -1,71 +1,37 @@
+import { useEffect, useState } from "react";
+import { fetchProducts } from "../utils/product";
+import Loading from "./Loading";
+import Product from "./Product";
+
 const ProductList = () => {
-    return (
-        <div className="container z-10 mx-auto my-12 p-9">
-            <div className="grid grid-cols-1 mt-2 md:grid-cols-2 lg:grid-cols-4 gap-4">
+  const [products, setProducts] = useState(null);
+  const [error, setError] = useState(null);
 
-                    <div className="card w-100 bg-white shadow-xl">
-                        <figure><img src="https://static-01.daraz.com.bd/p/b802b8ebb0a784ec791caa75e2d4de66.jpg" alt="Shoes" /></figure>
-                        <div className="card-body">
-                            <h6 className="text-black">iPhone 14 Pro Max iOS 16 6.7 inches Super Retina</h6>
-                            <p className="text-sm text-gray-400">If a dog chews shoes whose shoes does he choose?</p>
-                            <h6 className="font-bold">Price: $1,000</h6>
-                            <div className="card-actions justify-end">
-                                <button className="btn btn-sm btn-outline btn-primary">Add Cart</button>
-                            </div>
-                        </div>
-                    </div>
+  useEffect(() => {
+    fetchProducts()
+      .then((data) => setProducts(data))
+      .catch((error) => setError(error));
+  }, []);
 
-                <div className="card w-100 bg-white shadow-xl">
-                    <figure><img src="https://static-01.daraz.com.bd/p/b802b8ebb0a784ec791caa75e2d4de66.jpg" alt="Shoes" /></figure>
-                    <div className="card-body">
-                        <h6 className="text-black">iPhone 14 Pro Max iOS 16 6.7 inches Super Retina</h6>
-                        <p className="text-sm text-gray-400">If a dog chews shoes whose shoes does he choose?</p>
-                        <h6 className="font-bold">Price: $1,000</h6>
-                        <div className="card-actions justify-end">
-                            <button className="btn btn-sm btn-outline btn-primary">Add Cart</button>
-                        </div>
-                    </div>
-                </div>
+  let output;
+  if (error) {
+    output = <div>Something went wrong.</div>;
+  } else if (products && products.length > 0) {
+    output = products.map((item) => <Product product={item} key={item.id} />);
+  } else {
+    output = <div>No product found.</div>;
+  }
 
-                <div className="card w-100 bg-white shadow-xl">
-                    <figure><img src="https://static-01.daraz.com.bd/p/b802b8ebb0a784ec791caa75e2d4de66.jpg" alt="Shoes" /></figure>
-                    <div className="card-body">
-                        <h6 className="text-black">iPhone 14 Pro Max iOS 16 6.7 inches Super Retina</h6>
-                        <p className="text-sm text-gray-400">If a dog chews shoes whose shoes does he choose?</p>
-                        <h6 className="font-bold">Price: $1,000</h6>
-                        <div className="card-actions justify-end">
-                            <button className="btn btn-sm btn-outline btn-primary">Add Cart</button>
-                        </div>
-                    </div>
-                </div>
-                <div className="card w-100 bg-white shadow-xl">
-                    <figure><img src="https://static-01.daraz.com.bd/p/b802b8ebb0a784ec791caa75e2d4de66.jpg" alt="Shoes" /></figure>
-                    <div className="card-body">
-                        <h6 className="text-black">iPhone 14 Pro Max iOS 16 6.7 inches Super Retina</h6>
-                        <p className="text-sm text-gray-400">If a dog chews shoes whose shoes does he choose?</p>
-                        <h6 className="font-bold">Price: $1,000</h6>
-                        <div className="card-actions justify-end">
-                            <button className="btn btn-sm btn-outline btn-primary">Add Cart</button>
-                        </div>
-                    </div>
-                </div>
-
-                <div className="card w-100 bg-white shadow-xl">
-                    <figure><img src="https://static-01.daraz.com.bd/p/b802b8ebb0a784ec791caa75e2d4de66.jpg" alt="Shoes" /></figure>
-                    <div className="card-body">
-                        <h6 className="text-black">iPhone 14 Pro Max iOS 16 6.7 inches Super Retina</h6>
-                        <p className="text-sm text-gray-400">If a dog chews shoes whose shoes does he choose?</p>
-                        <h6 className="font-bold">Price: $1,000</h6>
-                        <div className="card-actions justify-end">
-                            <button className="btn btn-sm btn-outline btn-primary">Add Cart</button>
-                        </div>
-                    </div>
-                </div>
-
-
-
-            </div>
+  return (
+    <div className="container z-10 mx-auto my-12 p-9">
+      {products === null ? (
+        <Loading />
+      ) : (
+        <div className="grid grid-cols-1 mt-2 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          {output}
         </div>
-    );
+      )}
+    </div>
+  );
 };
 export default ProductList;
